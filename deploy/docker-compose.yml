@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  lucas:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: lucas-ai
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../data:/app/data
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - HOST=0.0.0.0
+      - PORT=8000
+      - LOW_MEMORY_MODE=true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G

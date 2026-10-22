@@ -1,0 +1,26 @@
+[Unit]
+Description=Lucas AI Platform — Private Intelligence on Raspberry Pi
+After=network.target network-online.target ollama.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/LUCAS
+Environment="PYTHONPATH=/home/pi/LUCAS/backend"
+EnvironmentFile=-/home/pi/LUCAS/.env
+ExecStart=/home/pi/LUCAS/backend/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1
+Restart=always
+RestartSec=5s
+
+# Security sandboxing
+NoNewPrivileges=true
+PrivateTmp=true
+
+# Resource limits for Raspberry Pi 5 4GB RAM
+MemoryMax=1.5G
+MemoryHigh=1.2G
+
+[Install]
+WantedBy=multi-user.target
